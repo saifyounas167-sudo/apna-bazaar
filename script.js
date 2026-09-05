@@ -560,7 +560,7 @@ function renderMoreProducts() {
     moreProductsContainer.innerHTML = "";
 
 
-    products.forEach((product) => {
+   document.querySelectorAll(".product").forEach((product) => {
 
         const data =
             getProductData(product);
