@@ -441,11 +441,23 @@
                     <div class="form-group">
                         <label>Product Image URL</label>
 
-                        <input
-                            type="text"
-                            id="productImage"
-                            placeholder="Image can be added later"
-                        >
+                       <input
+    type="hidden"
+    id="productImage"
+>
+
+<input
+    type="file"
+    id="productImageFile"
+    accept="image/png, image/jpeg, image/webp"
+>
+
+<div
+    id="imageUploadStatus"
+    style="margin-top: 8px; font-size: 14px;"
+>
+    No image selected
+</div>
                     </div>
 
 
@@ -592,7 +604,97 @@
                 SUPABASE_URL,
                 SUPABASE_KEY
             );
+// ==============================
+// PRODUCT IMAGE UPLOAD
+// ==============================
 
+const productImageFile =
+    document.getElementById("productImageFile");
+
+const imageUploadStatus =
+    document.getElementById("imageUploadStatus");
+
+const productImageInput =
+    document.getElementById("productImage");
+
+
+productImageFile.addEventListener(
+    "change",
+    async function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+            imageUploadStatus.textContent =
+                "No image selected";
+            return;
+        }
+
+        imageUploadStatus.textContent =
+            "Uploading image...";
+
+        try {
+
+            const safeFileName =
+                Date.now() +
+                "-" +
+                file.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-");
+
+            const filePath =
+                "products/" + safeFileName;
+
+
+            const { error: uploadError } =
+                await supabaseClient
+                    .storage
+                    .from("product-images")
+                    .upload(
+                        filePath,
+                        file,
+                        {
+                            cacheControl: "3600",
+                            upsert: false
+                        }
+                    );
+
+
+            if (uploadError) {
+                throw uploadError;
+            }
+
+
+            const { data } =
+                supabaseClient
+                    .storage
+                    .from("product-images")
+                    .getPublicUrl(filePath);
+
+
+            productImageInput.value =
+                data.publicUrl;
+
+
+            imageUploadStatus.textContent =
+                "✅ Image uploaded successfully";
+
+            console.log(
+                "Image URL:",
+                data.publicUrl
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            imageUploadStatus.textContent =
+                "❌ Image upload failed";
+
+        }
+
+    }
+);
 
         /* =========================
            ELEMENTS
@@ -1176,12 +1278,45 @@ async function loadOrders() {
             <td>${order.customer_name || ""}</td>
             <td>${order.customer_area || ""}</td>
             <td>Rs. ${order.grand_total || 0}</td>
-            <td>${order.order_status || "Pending"}</td>
+           <td>
+    ${
+        (order.order_status || "Pending") === "Pending"
+        ? `
+            <button onclick="updateOrderStatus(${order.id}, 'Accepted')">
+                Accept
+            </button>
+
+            <button onclick="updateOrderStatus(${order.id}, 'Rejected')">
+                Reject
+            </button>
+          `
+        : `<strong>${order.order_status}</strong>`
+    }
+</td>
 <td><button onclick="viewOrderDetails(${order.id})">View Details</button></td>
         `;
 
         ordersTable.appendChild(row);
     });
+}
+async function updateOrderStatus(orderId, newStatus) {
+
+    const { error } = await supabaseClient
+        .from("orders")
+        .update({
+            order_status: newStatus
+        })
+        .eq("id", orderId);
+
+    if (error) {
+        console.error("Order status update failed:", error);
+        alert("Order status update failed.");
+        return;
+    }
+
+    alert("Order status updated successfully ✅");
+
+    loadOrders();
 }
         loadProducts();
         async function viewOrderDetails(id) {

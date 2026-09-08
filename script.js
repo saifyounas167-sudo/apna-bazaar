@@ -1425,7 +1425,8 @@ const orderData = {
 
 const { data, error } = await supabaseClient
     .from("orders")
-    .insert([orderData]);
+    .insert([orderData])
+    .select("id, order_status");
 
 if (error) {
     console.error("Order Error:", error);
@@ -1433,7 +1434,74 @@ if (error) {
     return;
 }
 
-alert("Order successfully place ho gaya!");
+const savedOrder = data && data.length ? data[0] : null;
+
+if (savedOrder) {
+
+    const currentOrderCard =
+        document.getElementById("currentOrderCard");
+
+    const currentOrderId =
+        document.getElementById("currentOrderId");
+
+    const currentOrderStatus =
+        document.getElementById("currentOrderStatus");
+
+    const currentOrderTotal =
+        document.getElementById("currentOrderTotal");
+
+    currentOrderId.textContent =
+        savedOrder.id;
+
+    currentOrderStatus.textContent =
+        savedOrder.order_status || "Pending";
+
+    currentOrderTotal.textContent =
+        "Rs. " + (orderData.grand_total || 0);
+
+    currentOrderCard.style.display = "flex";
+
+    localStorage.setItem(
+        "currentOrderId",
+        savedOrder.id
+    );
+    localStorage.setItem(
+    "currentOrderId",
+    savedOrder.id
+);
+
+// 👇 یہاں نیا code paste کریں
+
+const checkoutPanel =
+    document.getElementById("checkoutPanel");
+
+const checkoutOverlay =
+    document.getElementById("checkoutOverlay");
+
+if (checkoutPanel) {
+    checkoutPanel.classList.remove("active");
+}
+
+if (checkoutOverlay) {
+    checkoutOverlay.classList.remove("active");
+}
+
+document.body.style.overflow = "";
+
+setTimeout(() => {
+    currentOrderCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}, 200);
+}
+
+
+alert(
+    "Order placed successfully! ✅\n\n" +
+    "Order ID: " + (savedOrder?.id || "Saved") + "\n" +
+    "Status: " + (savedOrder?.order_status || "Pending")
+);
 
 console.log("Saved Order:", data);
     }
@@ -1506,6 +1574,7 @@ async function displayDatabaseProducts() {
 
         const card = document.createElement("div");
         card.className = "product";
+        card.dataset.category = item.product_category || "";
 
         const image =
             item.product_image ||
@@ -1600,3 +1669,349 @@ searchInput.addEventListener("keydown", function (event) {
     }
 });
 searchInput.addEventListener("input", searchProducts);
+const checkOrderStatusButton =
+    document.getElementById("checkOrderStatus");
+
+const trackingOrderIdInput =
+    document.getElementById("trackingOrderId");
+
+const trackingResult =
+    document.getElementById("trackingResult");
+
+if (checkOrderStatusButton) {
+
+    checkOrderStatusButton.addEventListener(
+        "click",
+        async function () {
+
+            const orderId =
+                trackingOrderIdInput.value.trim();
+
+            if (!orderId) {
+                trackingResult.innerHTML =
+                    "Please enter your Order ID.";
+                return;
+            }
+
+            trackingResult.innerHTML =
+                "Checking order...";
+
+            const { data, error } =
+                await supabaseClient
+                    .from("orders")
+                    .select(
+                        "id, order_status, customer_name, grand_total"
+                    )
+                    .eq("id", orderId)
+                    .single();
+
+            if (error || !data) {
+                console.error("Track Order Error:", error);
+
+                trackingResult.innerHTML =
+                    "❌ Order not found. Please check your Order ID.";
+
+                return;
+            }
+
+            trackingResult.innerHTML = `
+                <div class="tracking-result-card">
+                    <strong>Order #${data.id}</strong>
+                    <p>Status: <b>${data.order_status || "Pending"}</b></p>
+                    <p>Total: Rs. ${data.grand_total || 0}</p>
+                </div>
+            `;
+        }
+    );
+}
+const menuToggle = document.getElementById("menuToggle");
+const mainMenu = document.getElementById("mainMenu");
+
+if (menuToggle && mainMenu) {
+
+    menuToggle.addEventListener("click", function () {
+        mainMenu.classList.toggle("active");
+    });
+
+    mainMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", function () {
+            mainMenu.classList.remove("active");
+        });
+    });
+}
+// ==============================
+// CATEGORY FILTER
+// ==============================
+
+const categoryCards = document.querySelectorAll(".category");
+
+categoryCards.forEach((card) => {
+
+    card.style.cursor = "pointer";
+
+    card.addEventListener("click", function () {
+
+        const selectedCategory =
+            this.dataset.category;
+
+        document
+            .querySelectorAll(".product")
+            .forEach((product) => {
+
+                const productCategory =
+                    product.dataset.category;
+
+                if (
+                    productCategory === selectedCategory
+                ) {
+                    product.style.display = "";
+                } else {
+                    product.style.display = "none";
+                }
+
+            });
+
+        const productsSection =
+            document.querySelector(".products-section");
+
+        if (productsSection) {
+            productsSection.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+    });
+
+});
+// ==================================
+// CURRENT ORDER - RESTORE AFTER REFRESH
+// ==================================
+
+async function loadSavedCurrentOrder() {
+
+    const savedOrderId =
+        localStorage.getItem("currentOrderId");
+
+    if (!savedOrderId) {
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .select("id, order_status, grand_total")
+        .eq("id", savedOrderId)
+        .single();
+
+    if (error || !data) {
+        console.error("Current order load error:", error);
+        return;
+    }
+
+    const card =
+        document.getElementById("currentOrderCard");
+
+    const orderId =
+        document.getElementById("currentOrderId");
+
+    const orderStatus =
+        document.getElementById("currentOrderStatus");
+
+    const orderTotal =
+        document.getElementById("currentOrderTotal");
+
+    if (!card) return;
+
+    orderId.textContent = data.id;
+
+    orderStatus.textContent =
+        data.order_status || "Pending";
+
+    orderTotal.textContent =
+        "Rs. " + (data.grand_total || 0);
+
+    card.style.display = "flex";
+}
+
+// CHECK LATEST STATUS BUTTON
+
+const refreshCurrentOrderButton =
+    document.getElementById("refreshCurrentOrder");
+
+if (refreshCurrentOrderButton) {
+
+    refreshCurrentOrderButton.addEventListener(
+        "click",
+        async function () {
+
+            await loadSavedCurrentOrder();
+
+        }
+    );
+}
+
+
+// PAGE REFRESH PAR ORDER DOBARA SHOW KARO
+
+loadSavedCurrentOrder();
+// ========================================
+// NEW CURRENT ORDER PANEL
+// ========================================
+
+const currentOrderPanel =
+    document.getElementById("currentOrderPanel");
+
+const currentOrderOverlay =
+    document.getElementById("currentOrderOverlay");
+
+const closeCurrentOrderPanel =
+    document.getElementById("closeCurrentOrderPanel");
+
+function openCurrentOrderPanel() {
+    if (currentOrderPanel) {
+        currentOrderPanel.classList.add("active");
+    }
+
+    if (currentOrderOverlay) {
+        currentOrderOverlay.classList.add("active");
+    }
+}
+
+function closeOrderPanel() {
+    if (currentOrderPanel) {
+        currentOrderPanel.classList.remove("active");
+    }
+
+    if (currentOrderOverlay) {
+        currentOrderOverlay.classList.remove("active");
+    }
+}
+
+async function loadCurrentOrder(openPanel = false) {
+
+    const orderId =
+        localStorage.getItem("currentOrderId");
+
+    if (!orderId) {
+        if (openPanel) {
+            alert("No current order found.");
+        }
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .select("id, order_status, grand_total")
+        .eq("id", orderId)
+        .single();
+
+    if (error || !data) {
+        console.error("Current Order Error:", error);
+
+        if (openPanel) {
+            alert("Order could not be loaded.");
+        }
+
+        return;
+    }
+
+    document.getElementById("currentOrderId").textContent =
+        data.id;
+
+    document.getElementById("currentOrderStatus").textContent =
+        data.order_status || "Pending";
+
+    document.getElementById("currentOrderTotal").textContent =
+        "Rs. " + (data.grand_total || 0);
+
+    if (openPanel) {
+        openCurrentOrderPanel();
+    }
+}
+
+// CURRENT ORDER MENU
+document.getElementById("currentOrderMenu")
+    ?.addEventListener("click", async function (event) {
+
+        event.preventDefault();
+
+        await loadCurrentOrder(true);
+
+    });
+
+
+// CLOSE BUTTON
+if (closeCurrentOrderPanel) {
+    closeCurrentOrderPanel.addEventListener(
+        "click",
+        closeOrderPanel
+    );
+}
+
+
+// CLICK OUTSIDE TO CLOSE
+if (currentOrderOverlay) {
+    currentOrderOverlay.addEventListener(
+        "click",
+        closeOrderPanel
+    );
+}
+
+
+// CHECK LATEST STATUS
+const latestStatusButton =
+    document.getElementById("refreshCurrentOrder");
+
+if (latestStatusButton) {
+
+    latestStatusButton.addEventListener(
+        "click",
+        async function () {
+
+            await loadCurrentOrder(false);
+
+            alert("Order status updated.");
+        }
+    );
+}
+
+
+// RESTORE ORDER DATA AFTER REFRESH
+loadCurrentOrder(false);
+async function checkOrderNow() {
+
+    const orderId =
+        document.getElementById("trackingOrderId").value.trim();
+
+    const trackingResult =
+        document.getElementById("trackingResult");
+
+    if (!orderId) {
+        trackingResult.innerHTML =
+            "Please enter your Order ID.";
+        return;
+    }
+
+    trackingResult.innerHTML =
+        "Checking order...";
+
+    const { data, error } =
+        await supabaseClient
+            .from("orders")
+            .select("id, order_status, grand_total")
+            .eq("id", orderId)
+            .single();
+
+    if (error || !data) {
+        trackingResult.innerHTML =
+            "❌ Order not found.";
+        return;
+    }
+
+    trackingResult.innerHTML = `
+        <div class="tracking-result-card">
+            <strong>Order #${data.id}</strong>
+            <p>Status: <b>${data.order_status || "Pending"}</b></p>
+            <p>Total: Rs. ${data.grand_total || 0}</p>
+        </div>
+    `;
+}

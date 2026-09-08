@@ -1229,3 +1229,504 @@ header {
 .place-order-btn:hover {
     opacity: 0.92;
 }
+/* =========================
+   MAIN NAVIGATION MENU
+========================= */
+
+.main-header {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 16px 7%;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.main-header .logo {
+    font-size: 25px;
+    font-weight: 800;
+    color: #087a3d;
+    white-space: nowrap;
+}
+
+.main-menu {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-left: auto;
+}
+
+.main-menu a {
+    text-decoration: none;
+    color: #222;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.main-menu a:hover {
+    color: #ff6600;
+}
+
+.main-header .location {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.main-header .cart {
+    cursor: pointer;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.menu-toggle {
+    display: none;
+    border: none;
+    background: #ff6600;
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+/* MOBILE MENU */
+
+@media (max-width: 900px) {
+
+    .main-header {
+        flex-wrap: wrap;
+        padding: 14px 18px;
+        gap: 12px;
+    }
+
+    .menu-toggle {
+        display: block;
+        margin-left: auto;
+    }
+
+    .main-menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        order: 5;
+        background: #ffffff;
+        border-top: 1px solid #eeeeee;
+        padding-top: 8px;
+    }
+
+    .main-menu.active {
+        display: flex;
+    }
+
+    .main-menu a {
+        padding: 13px 8px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .main-header .location {
+        width: calc(100% - 100px);
+    }
+
+    .main-header .cart {
+        margin-left: auto;
+    }
+}
+/* =========================
+   STICKY HEADER FIX
+========================= */
+
+.main-header {
+    position: sticky !important;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+}
+
+/* Mobile par bhi header hamesha upar rahe */
+@media (max-width: 900px) {
+
+    .main-header {
+        position: sticky !important;
+        top: 0;
+        z-index: 9999;
+        background: #ffffff;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 120px;
+    }
+}
+/* =========================
+   FIXED HEADER - ALWAYS VISIBLE
+========================= */
+
+.main-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #ffffff;
+}
+
+/* Header ke neeche content hide na ho */
+body {
+    padding-top: 85px;
+}
+
+/* Section click par header ke neeche na chhupe */
+#home,
+#categories,
+#orderTracking {
+    scroll-margin-top: 100px;
+}
+
+@media (max-width: 900px) {
+    body {
+        padding-top: 120px;
+    }
+
+    #home,
+    #categories,
+    #orderTracking {
+        scroll-margin-top: 130px;
+    }
+}
+/* =========================
+   FIXED HEADER - ALWAYS VISIBLE
+========================= */
+
+.main-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #ffffff;
+}
+
+/* Header ke neeche content hide na ho */
+body {
+    padding-top: 85px;
+}
+
+/* Section click par header ke neeche na chhupe */
+#home,
+#categories,
+#orderTracking {
+    scroll-margin-top: 100px;
+}
+
+@media (max-width: 900px) {
+    body {
+        padding-top: 120px;
+    }
+
+    #home,
+    #categories,
+    #orderTracking {
+        scroll-margin-top: 130px;
+    }
+}
+/* ==============================
+   CURRENT ORDER CARD
+============================== */
+
+.current-order-card {
+    max-width: 1160px;
+    margin: 20px auto;
+    padding: 18px 24px;
+    background: #ffffff;
+    border-left: 5px solid #ff6b00;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.current-order-info h3 {
+    margin: 0 0 10px;
+    color: #07883f;
+    font-size: 22px;
+}
+
+.current-order-info p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 15px;
+}
+
+#currentOrderStatus {
+    color: #ff6b00;
+}
+
+.refresh-current-order-btn {
+    background: #ff6b00;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.refresh-current-order-btn:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 700px) {
+    .current-order-card {
+        margin: 12px 15px;
+        padding: 15px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .refresh-current-order-btn {
+        width: 100%;
+    }
+}
+/* ============================= */
+/* CURRENT ORDER SIDE PANEL */
+/* ============================= */
+
+.current-order-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1998;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+}
+
+.current-order-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.current-order-panel {
+    position: fixed;
+    top: 78px;
+    right: -430px;
+    width: 400px;
+    max-width: 92%;
+    height: calc(100vh - 78px);
+    background: #ffffff;
+    z-index: 1999;
+    padding: 35px 25px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    box-shadow: -8px 0 30px rgba(0,0,0,0.15);
+    transition: right 0.35s ease;
+}
+
+.current-order-panel.active {
+    right: 0;
+}
+
+.current-order-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.order-success-icon {
+    width: 60px;
+    height: 60px;
+    border: 3px solid #07883f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #07883f;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 22px;
+}
+
+.order-small-title {
+    color: #777;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+
+.current-order-panel h2 {
+    color: #087a3b;
+    font-size: 25px;
+    margin: 0 0 8px;
+}
+
+.order-confirmed-text {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.current-order-box,
+.order-update-box {
+    border: 1px solid #e3e3e3;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.current-order-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.current-order-row:last-child {
+    border-bottom: none;
+}
+
+.current-order-row strong {
+    color: #07883f;
+}
+
+.order-update-box h3 {
+    margin: 0 0 7px;
+    color: #222;
+}
+
+.order-update-box p {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.refresh-current-order-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 9px;
+    background: #ff6500;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .current-order-panel {
+        width: 100%;
+        max-width: 100%;
+        padding: 30px 20px;
+    }
+}
+/* =========================
+   TRACK ORDER - PREMIUM CARD
+========================= */
+
+.order-tracking {
+    max-width: 760px;
+    margin: 50px auto;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.order-tracking h2 {
+    color: #07883f;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.order-tracking > p {
+    color: #666;
+    margin-bottom: 18px;
+}
+
+.tracking-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.tracking-box input {
+    flex: 1;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+.tracking-box input:focus {
+    border-color: #07883f;
+}
+
+.tracking-box button {
+    background: #ff6500;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tracking-result-card {
+    background: #f8fbf9;
+    border: 1px solid #e1e9e4;
+    border-left: 5px solid #07883f;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-top: 15px;
+}
+
+.tracking-result-card strong {
+    color: #07883f;
+    font-size: 20px;
+}
+
+.tracking-result-card p {
+    margin: 9px 0 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.tracking-result-card b {
+    color: #ff6500;
+}
+
+@media (max-width: 600px) {
+
+    .order-tracking {
+        margin: 25px 15px;
+        padding: 20px 16px;
+    }
+
+    .tracking-box {
+        flex-direction: column;
+    }
+
+    .tracking-box button {
+        width: 100%;
+    }
+}
