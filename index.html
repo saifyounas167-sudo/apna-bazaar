@@ -40,7 +40,17 @@
         <a href="#" id="currentOrderMenu">
             Current Order
         </a>
+<a href="login.html" id="loginMenu">
+    Login
+</a>
 
+<a href="#" id="accountMenu" style="display: none;">
+    My Account
+</a>
+
+<a href="#" id="logoutMenu" style="display: none;">
+    Logout
+</a>
     </nav>
 
     <div class="location">
@@ -200,7 +210,25 @@
 <!-- PRODUCTS -->
 
 <main>
+<!-- ORDER TRACKING -->
+<section class="order-tracking" id="orderTracking">
+    <h2>Track Your Order</h2>
+    <p>Enter your Order ID to check the latest status.</p>
 
+    <div class="tracking-box">
+        <input
+            type="number"
+            id="trackingOrderId"
+            placeholder="Enter Order ID"
+        >
+
+       <button type="button" onclick="checkOrderNow()">
+    Check Status
+</button>
+    </div>
+
+    <div id="trackingResult"></div>
+</section>
 <section class="products">
 
     <h2>Popular Near You</h2>
@@ -243,25 +271,7 @@
     </div>
 
 </div>
-<!-- ORDER TRACKING -->
-<section class="order-tracking" id="orderTracking">
-    <h2>Track Your Order</h2>
-    <p>Enter your Order ID to check the latest status.</p>
 
-    <div class="tracking-box">
-        <input
-            type="number"
-            id="trackingOrderId"
-            placeholder="Enter Order ID"
-        >
-
-       <button type="button" onclick="checkOrderNow()">
-    Check Status
-</button>
-    </div>
-
-    <div id="trackingResult"></div>
-</section>
 <div class="cart-overlay" id="cartOverlay"></div>
 <div class="checkout-panel" id="checkoutPanel">
     <div class="checkout-header">
@@ -280,6 +290,7 @@
     type="text"
     id="customerArea"
     placeholder="Area / Sector"
+
 >
 
 <div class="location-buttons">

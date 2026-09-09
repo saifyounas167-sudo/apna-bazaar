@@ -2015,3 +2015,65 @@ async function checkOrderNow() {
         </div>
     `;
 }
+// =====================================
+// CUSTOMER LOGIN / ACCOUNT MENU
+// =====================================
+
+async function updateAuthMenu() {
+
+    const loginMenu =
+        document.getElementById("loginMenu");
+
+    const accountMenu =
+        document.getElementById("accountMenu");
+
+    const logoutMenu =
+        document.getElementById("logoutMenu");
+
+    if (!loginMenu || !accountMenu || !logoutMenu) {
+        return;
+    }
+
+    const { data } =
+        await supabaseClient.auth.getUser();
+
+    const user = data?.user;
+
+    if (user) {
+
+        loginMenu.style.display = "none";
+
+        accountMenu.style.display = "";
+
+        logoutMenu.style.display = "";
+
+        const fullName =
+            user.user_metadata?.full_name || "My Account";
+
+        accountMenu.textContent = fullName;
+
+    } else {
+
+        loginMenu.style.display = "";
+
+        accountMenu.style.display = "none";
+
+        logoutMenu.style.display = "none";
+    }
+}
+
+
+// LOGOUT
+document.getElementById("logoutMenu")
+    ?.addEventListener("click", async function (event) {
+
+        event.preventDefault();
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "index.html";
+    });
+
+
+// CHECK LOGIN WHEN PAGE LOADS
+updateAuthMenu();
