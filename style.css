@@ -1730,3 +1730,19 @@ body {
         width: 100%;
     }
 }
+/* ===== LOGIN HEADER BUTTON ===== */
+.login-header-btn {
+    background: #ff6600;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s ease;
+}
+
+.login-header-btn:hover {
+    background: #e85d00;
+    transform: translateY(-1px);
+}

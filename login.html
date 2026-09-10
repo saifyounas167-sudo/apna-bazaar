@@ -377,10 +377,16 @@ async function loginUser() {
     message.style.color = "#07883f";
     message.textContent =
         "Login successful!";
+setTimeout(function () {
+    const returnAfterLogin =
+        localStorage.getItem("returnAfterLogin");
 
-    setTimeout(function () {
+    if (returnAfterLogin === "checkout") {
+        window.location.href = "index.html?resumeCheckout=true";
+    } else {
         window.location.href = "index.html";
-    }, 700);
+    }
+}, 700);
 }
 async function forgotPassword() {
     const email = document.getElementById("email").value.trim();

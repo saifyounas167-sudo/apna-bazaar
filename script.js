@@ -1381,7 +1381,40 @@ document.addEventListener(
             return;
         }
 
+// Customer must be logged in before placing order
+const { data: { user } } = await supabaseClient.auth.getUser();
 
+if (!user) {
+
+    localStorage.setItem(
+        "pendingOrderCart",
+        JSON.stringify(cart)
+    );
+
+    localStorage.setItem(
+    "pendingCheckoutDetails",
+    JSON.stringify({
+        name: document.getElementById("customerName").value.trim(),
+        phone: document.getElementById("customerPhone").value.trim(),
+        area: document.getElementById("customerArea").value.trim(),
+        address: document.getElementById("customerAddress").value.trim(),
+        latitude: customerLatitude,
+        longitude: customerLongitude,
+        distanceKm: currentDistanceKm,
+        deliveryCharge: calculatedDeliveryCharge
+    })
+);
+    localStorage.setItem(
+        "returnAfterLogin",
+        "checkout"
+    );
+
+    alert("Please login first to place your order.");
+
+    window.location.href = "login.html";
+
+    return;
+}
         if (
             Object.keys(cart).length === 0
         ) {
@@ -1414,7 +1447,7 @@ const orderData = {
     customer_address: address,
     customer_latitude: customerLatitude,
     customer_longitude: customerLongitude,
-    distance_km: customerDistanceKm,
+   distance_km: customerDistanceKm,
     delivery_charge: calculatedDeliveryCharge,
     subtotal: subtotal,
     grand_total: subtotal + calculatedDeliveryCharge,
@@ -1459,7 +1492,9 @@ if (savedOrder) {
     currentOrderTotal.textContent =
         "Rs. " + (orderData.grand_total || 0);
 
+    if (currentOrderCard) {
     currentOrderCard.style.display = "flex";
+}
 
     localStorage.setItem(
         "currentOrderId",
@@ -1489,18 +1524,19 @@ if (checkoutOverlay) {
 document.body.style.overflow = "";
 
 setTimeout(() => {
-    currentOrderCard.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    if (currentOrderCard) {
+        currentOrderCard.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }, 200);
 }
 
 
-alert(
-    "Order placed successfully! ✅\n\n" +
-    "Order ID: " + (savedOrder?.id || "Saved") + "\n" +
-    "Status: " + (savedOrder?.order_status || "Pending")
+ showOrderSuccessPopup(
+    savedOrder?.id || "Saved",
+    savedOrder?.order_status || "Pending"
 );
 
 console.log("Saved Order:", data);
@@ -2077,3 +2113,261 @@ document.getElementById("logoutMenu")
 
 // CHECK LOGIN WHEN PAGE LOADS
 updateAuthMenu();
+// SHOW TRACK ORDER SECTION ONLY WHEN TRACK ORDER MENU IS CLICKED
+const trackOrderMenu =
+    document.querySelector('a[href="#orderTracking"]');
+
+if (trackOrderMenu) {
+    trackOrderMenu.addEventListener(
+        "click",
+        function () {
+
+            const orderTrackingSection =
+                document.getElementById("orderTracking");
+
+            if (orderTrackingSection) {
+                orderTrackingSection.style.display = "block";
+
+                orderTrackingSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        }
+    );
+}
+// =====================================
+// RESTORE CART AFTER LOGIN
+// =====================================
+
+function restorePendingOrderCart() {
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("resumeCheckout") !== "true") {
+        return;
+    }
+
+    const savedCart =
+        localStorage.getItem("pendingOrderCart");
+
+    if (!savedCart) {
+        return;
+    }
+
+    try {
+        const restoredCart = JSON.parse(savedCart);
+
+        Object.keys(cart).forEach((key) => {
+            delete cart[key];
+        });
+
+        Object.assign(cart, restoredCart);
+
+        updateCart();
+        const savedDetails =
+    localStorage.getItem("pendingCheckoutDetails");
+
+if (savedDetails) {
+
+    const details =
+        JSON.parse(savedDetails);
+
+    document.getElementById("customerName").value =
+        details.name || "";
+
+    document.getElementById("customerPhone").value =
+        details.phone || "";
+
+    document.getElementById("customerArea").value =
+        details.area || "";
+
+    document.getElementById("customerAddress").value =
+        details.address || "";
+
+    customerLatitude =
+        details.latitude || null;
+
+    customerLongitude =
+        details.longitude || null;
+
+    currentDistanceKm =
+        details.distanceKm || 0;
+
+    calculatedDeliveryCharge =
+        details.deliveryCharge || 0;
+}
+
+setTimeout(() => {
+    const checkoutPanel =
+        document.getElementById("checkoutPanel");
+
+    const checkoutOverlay =
+        document.getElementById("checkoutOverlay");
+
+    if (checkoutPanel) {
+        checkoutPanel.classList.add("active");
+    }
+
+    if (checkoutOverlay) {
+        checkoutOverlay.classList.add("active");
+    }
+
+    document.body.style.overflow = "hidden";
+}, 300);
+
+        localStorage.removeItem("returnAfterLogin");
+
+        setTimeout(() => {
+            const cartButton =
+                document.querySelector(".cart");
+
+            if (cartButton) {
+                cartButton.click();
+            }
+        }, 300);
+
+    } catch (error) {
+        console.error("Cart restore failed:", error);
+    }
+}
+
+restorePendingOrderCart();
+function showOrderSuccessPopup(orderId, status) {
+    const oldPopup = document.getElementById("orderSuccessPopup");
+    if (oldPopup) oldPopup.remove();
+
+    const popup = document.createElement("div");
+    popup.id = "orderSuccessPopup";
+
+    popup.innerHTML = `
+        <div style="
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.55);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:99999;
+            padding:20px;
+        ">
+            <div style="
+                background:#ffffff;
+                width:100%;
+                max-width:420px;
+                border-radius:20px;
+                padding:32px 25px;
+                text-align:center;
+                box-shadow:0 20px 60px rgba(0,0,0,0.25);
+            ">
+
+                <div style="
+                    width:70px;
+                    height:70px;
+                    margin:0 auto 18px;
+                    border-radius:50%;
+                    background:#07883f;
+                    color:white;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:38px;
+                    font-weight:bold;
+                ">✓</div>
+
+                <h2 style="
+                    margin:0 0 10px;
+                    color:#07883f;
+                    font-size:25px;
+                ">
+                    Order Placed Successfully!
+                </h2>
+
+                <p style="
+                    color:#555;
+                    margin-bottom:22px;
+                ">
+                    Thank you! Your order has been received.
+                </p>
+
+                <div style="
+                    background:#f5f7f5;
+                    border-radius:12px;
+                    padding:15px;
+                    margin-bottom:20px;
+                    text-align:left;
+                ">
+                    <p style="margin:5px 0;">
+                        <strong>Order ID:</strong> ${orderId}
+                    </p>
+
+                    <p style="margin:5px 0;">
+                        <strong>Status:</strong>
+                        <span style="color:#07883f;font-weight:bold;">
+                            ${status}
+                        </span>
+                    </p>
+                </div>
+
+                <button
+onclick="finishOrderSuccess()"                    style="
+                        width:100%;
+                        border:none;
+                        background:#ff6600;
+                        color:white;
+                        padding:14px;
+                        border-radius:10px;
+                        font-size:16px;
+                        font-weight:bold;
+                        cursor:pointer;
+                    "
+                >
+                    Continue Shopping
+                </button>
+
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+}
+function finishOrderSuccess() {
+    // Close success popup
+    const popup = document.getElementById("orderSuccessPopup");
+    if (popup) {
+        popup.remove();
+    }
+
+    // Clear cart object
+    Object.keys(cart).forEach((key) => {
+        delete cart[key];
+    });
+
+    // Update cart UI
+    updateCartCount();
+
+    // Clear temporary saved checkout/order data
+    localStorage.removeItem("pendingOrderCart");
+    localStorage.removeItem("pendingCheckoutDetails");
+    localStorage.removeItem("returnAfterLogin");
+
+    // Close checkout panel if open
+    const checkoutPanel = document.getElementById("checkoutPanel");
+    const checkoutOverlay = document.getElementById("checkoutOverlay");
+
+    if (checkoutPanel) {
+        checkoutPanel.classList.remove("active");
+    }
+
+    if (checkoutOverlay) {
+        checkoutOverlay.classList.remove("active");
+    }
+
+    document.body.style.overflow = "";
+
+    // Go back to top
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
