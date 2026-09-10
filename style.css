@@ -1746,3 +1746,48 @@ body {
     background: #e85d00;
     transform: translateY(-1px);
 }
+/* ===== HEADER AUTH ACTIONS ===== */
+.header-auth-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-auth-actions a {
+    text-decoration: none;
+    font-weight: 700;
+}
+
+#loginMenu,
+#logoutMenu {
+    background: #ff6600;
+    color: #fff !important;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
+
+#accountMenu {
+    color: #07883f;
+}
+
+/* ===== MOBILE AUTH BUTTON ===== */
+@media (max-width: 600px) {
+    .header-auth-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+    }
+
+    #loginMenu,
+    #logoutMenu {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 7px;
+        white-space: nowrap;
+    }
+
+    #accountMenu {
+        display: none !important;
+    }
+}
