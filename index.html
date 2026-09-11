@@ -12,16 +12,49 @@
 
 <header class="main-header">
 
-    <div class="logo">Apna Bazaar</div>
+    <div class="logo">
+        Apna Bazaar
+    </div>
 
-    <button
-        type="button"
-        class="menu-toggle"
-        id="menuToggle"
-        aria-label="Open Menu"
-    >
-        ☰
-    </button>
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Open Menu"
+        >
+            ☰
+        </button>
+
+        <div class="header-auth-actions">
+
+            <a href="login.html"
+               id="loginMenu"
+               class="header-login-btn">
+                👤 Login
+            </a>
+
+            <a href="#"
+               id="accountMenu"
+               style="display:none;">
+                My Account
+            </a>
+
+            <a href="#"
+               id="logoutMenu"
+               class="header-login-btn"
+               style="display:none;">
+                Logout
+            </a>
+
+        </div>
+
+        <div class="cart">
+            🛒 Cart <span>0</span>
+        </div>
+
+    </div>
 
     <nav class="main-menu" id="mainMenu">
 
@@ -42,28 +75,10 @@
         </a>
 
     </nav>
-<div class="header-auth-actions">
 
-    <a href="login.html" id="loginMenu" class="login-header-btn">
-        Login
-    </a>
-
-    <a href="#" id="accountMenu" style="display: none;">
-        My Account
-    </a>
-
-    <a href="#" id="logoutMenu" style="display: none;">
-        Logout
-    </a>
-
-</div>
     <div class="location">
         📍 Deliver to:
         <strong>Select Area</strong>
-    </div>
-
-    <div class="cart">
-        🛒 Cart <span>0</span>
     </div>
 
 </header>
