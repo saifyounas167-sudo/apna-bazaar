@@ -1400,7 +1400,7 @@ if (!user) {
         address: document.getElementById("customerAddress").value.trim(),
         latitude: customerLatitude,
         longitude: customerLongitude,
-        distanceKm: currentDistanceKm,
+        distanceKm: customerDistanceKm,
         deliveryCharge: calculatedDeliveryCharge
     })
 );

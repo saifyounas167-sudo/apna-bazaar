@@ -1968,3 +1968,15 @@ body {
         display: none !important;
     }
 }
+/* ===== APNA BAZAAR LOGO SIZE ===== */
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 180px;
+    height: auto;
+    display: block;
+}
