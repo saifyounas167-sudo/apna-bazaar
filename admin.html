@@ -310,6 +310,81 @@
     font-weight: bold;
     cursor: pointer;
 }
+.order-modal-close {
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* یہاں ہمارا نیا admin-quick-nav CSS آئے گا */
+
+/* ADMIN QUICK NAVIGATION */
+/* ===== COMPACT ADMIN TABS ===== */
+
+.admin-quick-nav {
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px;
+    margin: 18px 0 22px;
+
+    background: #ffffff;
+    border: 1px solid #e6ece8;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.admin-quick-nav button {
+    flex: none;
+    min-width: 150px;
+    padding: 10px 16px;
+
+    border: 1px solid #dce5df;
+    border-radius: 10px;
+
+    background: #f7f9f8;
+    color: #333;
+
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.admin-quick-nav button:hover {
+    background: #eef5f0;
+}
+
+#productsTab.active {
+    background: #07873e;
+    color: #ffffff;
+    border-color: #07873e;
+}
+
+#ordersTab.active {
+    background: #ff6b00;
+    color: #ffffff;
+    border-color: #ff6b00;
+}
+
+@media (max-width: 600px) {
+    .admin-quick-nav {
+        width: 100%;
+        display: flex;
+    }
+
+    .admin-quick-nav button {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 8px;
+        font-size: 12px;
+    }
+}
     </style>
 
 </head>
@@ -348,11 +423,19 @@
             </div>
 
         </div>
+<div class="admin-quick-nav">
+    <button type="button" id="productsTab" onclick="showAdminSection('products')">
+        📦 Products
+    </button>
 
+    <button type="button" id="ordersTab" onclick="showAdminSection('orders')">
+        🧾 Customer Orders
+    </button>
+</div>
 
         <!-- PRODUCTS -->
 
-        <section class="product-section">
+        <section class="product-section" id="productsSection">
 
             <div class="section-title">
 
@@ -540,7 +623,7 @@
 
         <!-- ORDERS -->
 
-        <section class="orders-section">
+        <section class="orders-section" id="ordersSection">
 
             <h2>Customer Orders</h2>
 
@@ -1400,6 +1483,29 @@ loadOrders();
 function closeOrderDetails() {
     document.getElementById("orderDetailsModal").style.display = "none";
 }
+function showAdminSection(section) {
+    const productsSection = document.getElementById("productsSection");
+    const ordersSection = document.getElementById("ordersSection");
+    const productsTab = document.getElementById("productsTab");
+    const ordersTab = document.getElementById("ordersTab");
+
+    if (section === "products") {
+        productsSection.style.display = "block";
+        ordersSection.style.display = "none";
+
+        productsTab.classList.add("active");
+        ordersTab.classList.remove("active");
+    } else {
+        productsSection.style.display = "none";
+        ordersSection.style.display = "block";
+
+        ordersTab.classList.add("active");
+        productsTab.classList.remove("active");
+    }
+}
+
+// Default open Products
+showAdminSection("products");
     </script>
 <!-- ORDER DETAILS POPUP -->
 <div id="orderDetailsModal" class="order-modal">
