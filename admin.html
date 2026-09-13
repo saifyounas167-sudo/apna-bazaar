@@ -1280,18 +1280,42 @@ async function loadOrders() {
             <td>Rs. ${order.grand_total || 0}</td>
            <td>
     ${
-        (order.order_status || "Pending") === "Pending"
-        ? `
-            <button onclick="updateOrderStatus(${order.id}, 'Accepted')">
-                Accept
-            </button>
+    (order.order_status || "Pending") === "Pending"
+    ? `
+        <button onclick="updateOrderStatus(${order.id}, 'Accepted')">
+            Accept
+        </button>
 
-            <button onclick="updateOrderStatus(${order.id}, 'Rejected')">
-                Reject
-            </button>
-          `
-        : `<strong>${order.order_status}</strong>`
-    }
+        <button onclick="updateOrderStatus(${order.id}, 'Rejected')">
+            Reject
+        </button>
+      `
+
+    : order.order_status === "Accepted"
+    ? `
+        <button onclick="updateOrderStatus(${order.id}, 'Preparing')">
+            Preparing
+        </button>
+      `
+
+    : order.order_status === "Preparing"
+    ? `
+        <button onclick="updateOrderStatus(${order.id}, 'Out for Delivery')">
+            Out for Delivery
+        </button>
+      `
+
+    : order.order_status === "Out for Delivery"
+    ? `
+        <button onclick="updateOrderStatus(${order.id}, 'Delivered')">
+            Delivered
+        </button>
+      `
+
+    : `<strong>${order.order_status}</strong>`
+}
+         
+    
 </td>
 <td><button onclick="viewOrderDetails(${order.id})">View Details</button></td>
         `;
